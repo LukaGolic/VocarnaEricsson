@@ -1,10 +1,10 @@
 #include "FruitShop.h"
 
-void PrintHomeMenu(){
+void FruitShop::PrintHomeMenu(){
     printf("\n******* WELCOME to FRUITKO *******\n\n\t(1)Warehouse management\n\t(2)Info request\n\t(3)Shopping\n\t(4)Exit");
 }
 
-void PrintManagementMenu(){
+void FruitShop::PrintManagementMenu(){
     printf("\n\t******* Warehouse management *******\n\n\t\t(1)Add fruit\n\t\t(2)Delete fruit\n\t\t(3)Warehouse status\n\t\t(4)Change fruit status\n\t\t(5)Return\n\n\t\tPlease enter the desired option : ");
 }
 
@@ -19,7 +19,11 @@ void FruitShop::HandleRequest(){
     if(info.price == 0 && info.amount == 0){
         printf("\t\t\tWe don't have %s in warehouse.", name.c_str());
     }else{
-        printf("\t\t\tInfo for %s :\n\t\t\t\t- Amount : %d kg\n\t\t\t\t- Price : %d HRK\n", name.c_str(), info.amount, info.price);
+        if(typeInt){
+            printf("\t\t\tInfo for %s :\n\t\t\t\t- Amount : %d kg\n\t\t\t\t- Price : %d HRK\n", name.c_str(), info.amount, info.price);
+        }else{
+            printf("\t\t\tInfo for %s :\n\t\t\t\t- Amount : %.2f kg\n\t\t\t\t- Price : %.2f HRK\n", name.c_str(), info.amount, info.price);
+        }
     }
 }
 
@@ -30,7 +34,11 @@ void FruitShop::PrintFruits(){
         map<string, fruitInfo<typeOfFruitInfo>>::iterator it;
         cout << "\n\t\t******* Current warehouse status *******" << endl;
         for(it = warehouse.begin(); it != warehouse.end(); ++it){
-            printf("\t\t\t\tName: %s\n\t\t\t\tamount: %d kg\n\t\t\t\tprice: %d HRK\n\n", it->first.c_str(), it->second.amount, it->second.price);
+            if(typeInt){
+                printf("\t\t\t\tName: %s\n\t\t\t\tamount: %d kg\n\t\t\t\tprice: %d HRK\n\n", it->first.c_str(), it->second.amount, it->second.price);
+            }else{
+                printf("\t\t\t\tName: %s\n\t\t\t\tamount: %.2f kg\n\t\t\t\tprice: %.2f HRK\n\n", it->first.c_str(), it->second.amount, it->second.price);
+            }
         } 
     }
 }
@@ -54,7 +62,11 @@ void FruitShop::AddFruit(string name, fruitInfo<typeOfFruitInfo> info){
         return;
     }else{
         warehouse.insert(pair<string, fruitInfo<typeOfFruitInfo>> (name, info));
-        printf("\t\t\t\tNew fruit entered :\n\t\t\t\t- Name : %s\n\t\t\t\t- Amount : %d kg\n\t\t\t\t- Price : %d HRK\n", name.c_str(), info.amount, info.price);
+        if(typeInt){
+            printf("\t\t\t\tNew fruit entered :\n\t\t\t\t- Name : %s\n\t\t\t\t- Amount : %d kg\n\t\t\t\t- Price : %d HRK\n", name.c_str(), info.amount, info.price);
+        }else{
+            printf("\t\t\t\tNew fruit entered :\n\t\t\t\t- Name : %s\n\t\t\t\t- Amount : %.2f kg\n\t\t\t\t- Price : %.2f HRK\n", name.c_str(), info.amount, info.price);
+        }
     }
 }
 
@@ -65,7 +77,11 @@ void FruitShop::AddFruit(string name, typeOfFruitInfo amount, typeOfFruitInfo pr
     }else{
         fruitInfo<typeOfFruitInfo> info {amount, price};
         warehouse.insert(pair<string, fruitInfo<typeOfFruitInfo>> (name, info));
-        printf("\t\t\t\tNew fruit entered :\n\t\t\t\t- Name : %s\n\t\t\t\t- Amount : %d kg\n\t\t\t\t- Price : %d HRK\n", name.c_str(), info.amount, info.price);
+        if(typeInt){
+            printf("\t\t\t\tNew fruit entered :\n\t\t\t\t- Name : %s\n\t\t\t\t- Amount : %d kg\n\t\t\t\t- Price : %d HRK\n", name.c_str(), info.amount, info.price);
+        }else{
+            printf("\t\t\t\tNew fruit entered :\n\t\t\t\t- Name : %s\n\t\t\t\t- Amount : %.2f kg\n\t\t\t\t- Price : %.2f HRK\n", name.c_str(), info.amount, info.price);
+        }
     }
 }
 
@@ -93,7 +109,7 @@ fruitInfo<typeOfFruitInfo> FruitShop::GetInfoOfFruit(string name){
     return info;
 }
 
-void FruitShop::ChangePriceOfFruit(string name, int price){
+void FruitShop::ChangePriceOfFruit(string name, typeOfFruitInfo price){
     if(IsFruitOnWarehouse(name)){
         map<string, fruitInfo<typeOfFruitInfo>>::iterator it;
         it = warehouse.find(name);
@@ -103,7 +119,7 @@ void FruitShop::ChangePriceOfFruit(string name, int price){
     }
 }
 
-void FruitShop::ChangeAmountOfFruit(string name, int amount){
+void FruitShop::ChangeAmountOfFruit(string name, typeOfFruitInfo amount){
     if(IsFruitOnWarehouse(name)){
         map<string, fruitInfo<typeOfFruitInfo>>::iterator it;
         it = warehouse.find(name);
@@ -151,7 +167,12 @@ void FruitShop::HandleChangeFruitState(){
                     string sNewAmount;
                     cin >> sNewAmount;   
                     try{
-                        ChangeAmountOfFruit(name, stoi(sNewAmount));   
+                        if(typeInt){
+                            ChangeAmountOfFruit(name, stoi(sNewAmount));   
+                        }else{
+                            ChangeAmountOfFruit(name, stof(sNewAmount));   
+                        }
+                        
                     }
                     catch(const exception& e){
                         cerr << "\t\t\t\t" << e.what() << '\n' << "\t\t\t\tPlease enter number.\n";
@@ -168,7 +189,11 @@ void FruitShop::HandleChangeFruitState(){
                     string sNewPrice;
                     cin >> sNewPrice;   
                     try{
-                        ChangePriceOfFruit(name, stoi(sNewPrice));
+                        if(typeInt){
+                            ChangePriceOfFruit(name, stoi(sNewPrice));
+                        }else{
+                            ChangePriceOfFruit(name, stof(sNewPrice));   
+                        }
                     }
                     catch(const exception& e){
                         cerr << "\t\t\t\t" << e.what() << '\n' << "\t\t\t\tPlease enter number.\n";
@@ -180,10 +205,9 @@ void FruitShop::HandleChangeFruitState(){
                 break;
             }            
             default : 
-                cout << "\t\t!!!You must enter digit(1 or 2)!!!\n\t\tEnter desired operation : ";
+                cout << "\t\t\t\t!!!You must enter digit(1 or 2)!!!\n";
                 break;
         }
-
     }    
 }
 
@@ -204,12 +228,16 @@ void FruitShop::HandleShopping(){
                 cout << "\t\tMaybe you entered the wrong name, we don't have " << fruit << ".\n\t\tPlease try again or type \"ret\" to return.\n";
             }else{
                 string sAmountToBuy = "";
-                int amountToBuy = 0;
+                typeOfFruitInfo amountToBuy = 0;
                 while(true){
                     cout << "\t\tEnter the desired amount in kg  : ";
                     cin >> sAmountToBuy;
                     try{
-                        amountToBuy = stoi(sAmountToBuy);
+                        if(typeInt){
+                            amountToBuy = stoi(sAmountToBuy);
+                        }else{
+                            amountToBuy = stof(sAmountToBuy);
+                        }
                     }
                     catch(const exception& e){
                         cerr << "\t\t" << e.what() << '\n' << "\t\tPlease enter number of kilograms.\n";
@@ -248,8 +276,13 @@ void FruitShop::HandleAddingFruit(){
             cout << "\t\t\tPrice(HRK) : ";
             cin >> sPrice;
             try{
-                amount = stoi(sAmount);
-                price = stoi(sPrice);
+                if(typeInt){
+                    amount = stoi(sAmount);
+                    price = stoi(sPrice);
+                }else{
+                    amount = stof(sAmount);
+                    price = stof(sPrice);
+                }
             }
             catch(const exception& e){
                 cerr << "\t\t\t\t" << e.what() << '\n';
@@ -297,36 +330,28 @@ void FruitShop::HandleManagement(){
         }
         switch(option){
             case Add :
-            {
                 HandleAddingFruit();
                 break;
-            }
+
             case Delete :
-            {
                 HandleDelete();
                 break;
-            }
+
             case Status :
-            {
                 PrintFruits();
                 break;
-            }
+
             case Change :
-            {
                 HandleChangeFruitState();
                 break;
-            }
+
             case Return :
-            {
                 close = true;
                 break;
-            }
+
             default :
-            {
                 cout << "\t\t!!!You must enter digit(1, 2, 3, 4 or 5)!!!" << endl;
                 break;
-            } 
         }
     }while(!close);
-    return;
 }

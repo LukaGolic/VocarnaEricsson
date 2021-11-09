@@ -6,7 +6,13 @@
 #include <string>
 #include <map>
 
+#define typeInt false
+
+#if typeInt
 #define typeOfFruitInfo int
+#else
+#define typeOfFruitInfo float
+#endif
 
 using namespace std;
 
@@ -29,8 +35,8 @@ class FruitShop{
         void AddFruit(string name, fruitInfo<typeOfFruitInfo> info);
         void AddFruit(string name, typeOfFruitInfo amount, typeOfFruitInfo price);
         void DeleteFruit(string name);
-        void ChangePriceOfFruit(string name, int price);
-        void ChangeAmountOfFruit(string name, int amount);
+        void ChangePriceOfFruit(string name, typeOfFruitInfo price);
+        void ChangeAmountOfFruit(string name, typeOfFruitInfo amount);
         fruitInfo<typeOfFruitInfo> GetInfoOfFruit(string name);
         void PrintFruits();
         bool IsFruitOnWarehouse(string name);
@@ -40,9 +46,8 @@ class FruitShop{
         void HandleAddingFruit();
         void HandleDelete();
         void HandleRequest();
+        void PrintHomeMenu();
+        void PrintManagementMenu();
 };
-
-void PrintHomeMenu();
-void PrintManagementMenu();
 
 #endif

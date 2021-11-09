@@ -13,8 +13,9 @@ int main(){
     shop.AddFruit("kiwi", 20, 15);
     string sOption = "";
     unsigned int option = 0;
+    
     do{
-        PrintHomeMenu();
+        shop.PrintHomeMenu();
         while(true){
             cout << "\n\n\tPlease enter the desired option : ";
             cin >> sOption;
@@ -31,10 +32,9 @@ int main(){
             case Management :
                 shop.HandleManagement();
                 break;
-            case Request :{
+            case Request :
                 shop.HandleRequest();
                 break;
-            }
             case Shopping :
                 shop.HandleShopping();
                 break;
